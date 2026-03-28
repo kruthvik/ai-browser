@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "name": "AI Browser Bridge",
+    "version": "2.0",
+    "description": "AI-powered browser automation with multi-provider support",
+    "permissions": [
+        "sidePanel",
+        "tabs",
+        "scripting",
+        "activeTab",
+        "storage"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    },
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
+    "action": {
+        "default_title": "Open AI Bridge"
+    }
+}
