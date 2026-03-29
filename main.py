@@ -212,10 +212,19 @@ async def run_agent_workflow(data, websocket):
                 dom_snapshot = {"url": "", "title": "", "elements": []}
                 await websocket.send_text(f"Warning: Could not read DOM ({dom_err}). Proceeding with empty state.")
 
+        history_data = data.get("history", [])
+        chat_history_str = ""
+        if history_data:
+            chat_history_str = "--- Past Conversation Context ---\n"
+            for m in history_data:
+                role = {"user": "User", "ai": "Assistant", "tool": "Tool", "system": "System"}.get(m.get("type", ""), "Unknown")
+                chat_history_str += f"[{role}]: {m.get('text', '')}\n"
+            chat_history_str += "--------------------------------\n\n"
+
         # Build messages
         messages = [
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": f"Task: {user_command}\n\nDOM JSON:\n{json.dumps(dom_snapshot)}"},
+            {"role": "user", "content": f"{chat_history_str}Current Task: {user_command}\n\nDOM JSON:\n{json.dumps(dom_snapshot)}"},
         ]
 
         MAX_TOOL_ROUNDS = 200

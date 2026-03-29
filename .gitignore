@@ -44,3 +44,6 @@ venv.bak/
 
 # Project specific
 chromium_profile/
+chromium_user_data/
+ai_browser_profile/
+__pycache__/

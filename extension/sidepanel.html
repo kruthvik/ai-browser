@@ -326,6 +326,114 @@
             0%, 100% { box-shadow: 0 0 8px rgba(34,197,94,0.6); }
             50% { box-shadow: 0 0 3px rgba(34,197,94,0.3); }
         }
+        /* ─── History Panel ─── */
+        .history-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 8, 15, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .history-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .history-panel {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(12, 17, 32, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            z-index: 50;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+        .history-panel.open {
+            transform: translateX(280px);
+        }
+
+        .history-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .history-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .new-chat-btn {
+            width: calc(100% - 40px);
+            margin: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(99, 137, 255, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(99, 137, 255, 0.2);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .new-chat-btn:hover {
+            background: rgba(99, 137, 255, 0.15);
+            border-color: rgba(99, 137, 255, 0.3);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 12px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-item {
+            padding: 12px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .history-item.active {
+            background: rgba(99, 137, 255, 0.1);
+            border-left: 2px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+        }
+        .history-item-title {
+            font-size: 13px;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .history-item-date {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body>
@@ -345,6 +453,15 @@
                 <div id="status" class="status-dot"></div>
                 <span id="status-label">Offline</span>
             </div>
+            
+            <button id="history-btn" title="Chat History" style="background: none; border: none; cursor: pointer; padding: 4px; border-radius: 6px; display: flex; align-items: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="20" x2="12" y2="10"/>
+                    <line x1="18" y1="20" x2="18" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="16"/>
+                </svg>
+            </button>
+
             <button id="settings-btn" title="Settings" style="background: none; border: none; cursor: pointer; padding: 4px; border-radius: 6px; display: flex; align-items: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"/>
@@ -382,6 +499,22 @@
             </div>
         </div>
     </footer>
+
+    <!-- History Sidebar -->
+    <div id="history-backdrop" class="history-backdrop"></div>
+    <div id="history-panel" class="history-panel">
+        <div class="history-header">
+            <span class="history-title">Chat History</span>
+        </div>
+        <button id="new-chat-btn" class="new-chat-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            New Chat
+        </button>
+        <div id="history-list" class="history-list"></div>
+    </div>
 
     <script src="sidepanel.js"></script>
 </body>
